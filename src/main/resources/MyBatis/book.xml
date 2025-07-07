@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wt.ssm.dao.BookDao">
+    <resultMap id="BookResultMap" type="wt.ssm.bean.Book">
+        <id property="bookId" column="book_id" />
+        <result property="name" column="name" />
+        <result property="author" column="author" />
+        <result property="publish" column="publish" />
+        <result property="isbn" column="ISBN" />
+        <result property="introduction" column="introduction" />
+        <result property="language" column="language" />
+        <result property="price" column="price" />
+        <result property="pubdate" column="pub_date" />
+        <result property="classId" column="class_id" />
+        <result property="number" column="number" />
+        <result property="clickNumber" column="click_number" />
+    </resultMap>
+
+    <insert id="addBook" parameterType="wt.ssm.bean.Book">
+        insert into book_info (name, author, publish, ISBN, introduction, language, price, pub_date, class_id, number)
+        values (#{name}, #{author}, #{publish}, #{ISBN}, #{introduction}, #{language}, #{price}, #{pubdate}, #{classId}, #{number})
+    </insert>
+    <update id="editBook" parameterType="wt.ssm.bean.Book">
+        update book_info set name=#{name}, author=#{author},
+        publish=#{publish}, ISBN=#{ISBN}, introduction=#{introduction},
+        language=#{language}, price=#{price}, pub_date=#{pub_date},
+        class_id=#{class_id}, number=#{number} where book_id=#{book_id}
+    </update>
+    <select id="getBooksByPage" resultType="wt.ssm.bean.Book" parameterType="map">
+        select * from book_info limit #{offset}, #{pageSize}
+    </select>
+    <select id="getTotalBooks" resultType="int">
+        select count(*) from book_info
+    </select>
+    <select id="queryBook" resultType="wt.ssm.bean.Book" parameterType="String">
+        select * from book_info where name like #{search}
+    </select>
+    <select id="queryBookByPage" resultType="wt.ssm.bean.Book" parameterType="map">
+        select * from book_info where name like #{search} limit #{offset}, #{pageSize}
+    </select>
+    <select id="getQueryBookTotal" resultType="int" parameterType="String">
+        select count(*) from book_info where name like #{search}
+    </select>
+    <select id="matchBook" resultType="int" parameterType="String">
+        select count(*) from book_info where name like #{search}
+    </select>
+    <select id="getBook" resultType="wt.ssm.bean.Book" parameterType="long">
+        select * from book_info where book_id = #{book_id}
+    </select>
+    <select id="getAllBooks" resultMap="BookResultMap">
+        SELECT * FROM book_info
+    </select>
+    <delete id="deleteBook" parameterType="long">
+        delete from book_info where book_id = #{book_id}
+    </delete>
+</mapper>

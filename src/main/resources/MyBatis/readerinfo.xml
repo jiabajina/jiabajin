@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wt.ssm.dao.ReaderInfoDao">
+    <select id="getAllReaderInfo" resultType="wt.ssm.bean.ReaderInfo">
+        select reader_id as readerId, name, sex, birth, address, phone from reader_info
+    </select>
+    <select id="findReaderInfoByReaderId" resultType="wt.ssm.bean.ReaderInfo" parameterType="long">
+        select reader_id as readerId, name, sex, birth, address, phone from reader_info where reader_id = #{readerId}
+    </select>
+    <delete id="deleteReaderInfo" parameterType="long">
+        delete from reader_info where reader_id = #{readerId}
+    </delete>
+    <update id="editReaderInfo" parameterType="wt.ssm.bean.ReaderInfo">
+        update reader_info set name = #{name} , sex = #{sex},
+        birth = #{birth} ,address = #{address} ,phone = #{phone}
+        where reader_id = #{readerId}
+    </update>
+    <update id="editReaderCard" parameterType="wt.ssm.bean.ReaderInfo">
+        update reader_card set username = #{name}
+        where reader_id = #{readerId}
+    </update>
+    <insert id="addReaderInfo" parameterType="wt.ssm.bean.ReaderInfo" useGeneratedKeys="true" keyProperty="reader_id" keyColumn="reader_id">
+        insert into reader_info(reader_id, name, sex, birth, address, phone)
+        values(null, #{name},#{sex},#{birth},#{address},#{phone})
+    </insert>
+    <select id="getReaderInfoByPageAndName" resultType="wt.ssm.bean.ReaderInfo" parameterType="map">
+        select reader_id as readerId, name, sex, birth, address, phone from reader_info
+        <where>
+            <if test="name != null and name != ''">
+                and name like CONCAT('%', #{name}, '%')
+            </if>
+        </where>
+        order by reader_id
+        limit #{offset}, #{pageSize}
+    </select>
+    <select id="getReaderInfoCountByName" resultType="int" parameterType="string">
+        select count(*) from reader_info
+        <where>
+            <if test="_parameter != null and _parameter != ''">
+                and name like CONCAT('%', #{_parameter}, '%')
+            </if>
+        </where>
+    </select>
+</mapper>
